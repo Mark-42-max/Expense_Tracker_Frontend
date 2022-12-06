@@ -1,13 +1,14 @@
 /* eslint-disable prettier/prettier */
 
-import {StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import bg1 from '../assets/bg1.jpg';
 
 const WelcomeScreen = () => {
   return (
-    <View style={styles.container}>
+    <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
       <Text>WelcomeScreen</Text>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -18,6 +19,5 @@ const styles = StyleSheet.create({
     flex: 1,
     //justifyContent: 'center',
     //alignItems: 'center',
-    backgroundColor: 'red',
   },
 });

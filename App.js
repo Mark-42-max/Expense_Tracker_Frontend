@@ -14,7 +14,7 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar
         backgroundColor={
-          'radial-gradient(50% 50% at 50% 50%, rgba(196, 63, 83, 0.7) 0%, rgba(159, 140, 246, 0) 100%)'
+          'radial-gradient(50% 50% at 50% 50%, rgba(63,174,251,0.5) 0%, rgba(rgba(252,70,107,0.7) 100%)'
         }
       />
       <NavigationContainer>
