@@ -6,6 +6,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from './screens/SplashScreen';
+import Intro from './screens/Intro';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -29,6 +30,12 @@ const App = () => {
           <Stack.Screen
             name="Splash"
             component={SplashScreen}
+            options={{headerShown: false,  headerBackVisible:false}}
+          />
+
+          <Stack.Screen
+            name="Intro"
+            component={Intro}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
