@@ -13,7 +13,10 @@ const WelcomeScreen = () => {
   const endTextTyped = () => {
     setTimeout(() => {
       //console.log('endTextTyped');
-      navigation.navigate('Intro');
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Intro'}],
+      });
     }, 700);
   };
 

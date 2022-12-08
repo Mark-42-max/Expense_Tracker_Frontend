@@ -13,7 +13,10 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Welcome');
+      navigation.reset({
+          index: 0,
+          routes: [{name: 'Welcome'}],
+        });
     }, 3000);
   }, [navigation]);
   return (

@@ -1,5 +1,12 @@
 /* eslint-disable prettier/prettier */
-import {ImageBackground, StyleSheet, Text, View, Animated, TouchableOpacity} from 'react-native';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import bg1 from '../assets/bg1.jpg';
 
@@ -72,35 +79,44 @@ const Intro = () => {
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
       <View style={styles.introContainer}>
-        <Animated.View
-          style={[
-            styles.introCont,
-            {
-              opacity: fadeAnim,
-              transform: [{translateY: translateAnim}, {rotate: rotateLeft}],
-            },
-          ]}>
-          <Text>1</Text>
-        </Animated.View>
+        <View style={styles.txtCont}>
+          <Animated.Text style={[styles.introText, {opacity: opacityAnim}]}>Apart from keeping log of your expenses...</Animated.Text>
+        </View>
+        <View style={styles.cardCont}>
+          <Animated.View
+            style={[
+              styles.introCont,
+              {
+                opacity: fadeAnim,
+                transform: [{translateY: translateAnim}, {rotate: rotateLeft}],
+              },
+            ]}>
+            <Text style={styles.cardTxt}>We also offer a log book to keep track of split bills and cheques.</Text>
+          </Animated.View>
 
-        <Animated.View
-          style={[
-            styles.introCont,
-            {
-              opacity: fadeAnim,
-              transform: [{translateY: translateAnim}, {rotate: rotateRight}],
-            },
-          ]}>
-          <Text>2</Text>
-        </Animated.View>
+          <Animated.View
+            style={[
+              styles.introCont,
+              {
+                opacity: fadeAnim,
+                transform: [{translateY: translateAnim}, {rotate: rotateRight}],
+              },
+            ]}>
+            <Text style={styles.cardTxt}>Keep track of advance expenses which are to be done in future, if you plan to do so and let us know about the same</Text>
+          </Animated.View>
+        </View>
+
+        <View style={styles.txtCont}>
+          <Animated.Text style={[styles.introText, {opacity: opacityAnim}]}>So what are you waiting for? Let's get started...</Animated.Text>
+        </View>
       </View>
       <Animated.View style={[styles.buttonCont, {opacity: opacityAnim}]}>
         <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonTxt}>Login</Text>
+          <Text style={styles.buttonTxt}>Login</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonTxt}>SignUp</Text>
+          <Text style={styles.buttonTxt}>SignUp</Text>
         </TouchableOpacity>
       </Animated.View>
     </ImageBackground>
@@ -116,9 +132,6 @@ const styles = StyleSheet.create({
 
   introContainer: {
     flex: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
   },
 
   buttonCont: {
@@ -143,6 +156,10 @@ const styles = StyleSheet.create({
     shadowRadius: 6.68,
 
     elevation: 11,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
 
   button: {
@@ -170,5 +187,32 @@ const styles = StyleSheet.create({
     color: '#70cfc8',
     fontSize: 15,
     fontFamily: 'MerriweatherSans-Italic',
+  },
+
+  cardCont: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+
+  introText: {
+    fontFamily: 'MerriweatherSans-BoldItalic',
+    fontSize: 30,
+    color: 'white',
+    whiteSpace: 'nowrap',
+  },
+
+  txtCont: {
+    flex: 0.5,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+
+  cardTxt: {
+    fontFamily: 'MerriweatherSans-MediumItalic',
+    fontSize: 13,
+    color: '#70cfc8',
   },
 });
