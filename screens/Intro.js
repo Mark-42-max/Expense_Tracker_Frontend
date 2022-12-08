@@ -9,8 +9,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import bg1 from '../assets/bg1.jpg';
+import { useNavigation } from '@react-navigation/native';
 
 const Intro = () => {
+
+  const navigation = useNavigation();
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateAnim = useRef(new Animated.Value(200)).current;
   const rotateLeftAnim = useRef(new Animated.Value(0)).current;
@@ -62,7 +66,7 @@ const Intro = () => {
   const opacity = () => {
     Animated.timing(opacityAnim, {
       toValue: 1,
-      duration: 3000,
+      duration: 2000,
       useNativeDriver: true,
     }).start();
   };
@@ -111,11 +115,11 @@ const Intro = () => {
         </View>
       </View>
       <Animated.View style={[styles.buttonCont, {opacity: opacityAnim}]}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.buttonTxt}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Signup')}>
           <Text style={styles.buttonTxt}>SignUp</Text>
         </TouchableOpacity>
       </Animated.View>

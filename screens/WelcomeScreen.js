@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import React from 'react';
 import bg1 from '../assets/bg1.jpg';
 import TypeWriter from 'react-native-typewriter';
@@ -20,8 +20,16 @@ const WelcomeScreen = () => {
     }, 700);
   };
 
+  const endImmediately = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Intro'}],
+    });
+  };
+
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
+      <TouchableWithoutFeedback style={styles.container} onPress={() => endImmediately()}>
       <View style={styles.welcoTxt}>
         <TypeWriter minDelay={10} typing={1} style={styles.welcoTxtHead}>Confused where your salary's getting squandered?</TypeWriter>
         <Text>{'\n'}</Text>
@@ -29,6 +37,7 @@ const WelcomeScreen = () => {
         <Text>{'\n'}</Text>
         <TypeWriter minDelay={10} initialDelay={7000}  typing={1} style={styles.welcoTxtHead} onTypingEnd={() => endTextTyped()}>Introducing the digital handbook to keep record of your expenses</TypeWriter>
       </View>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 };
