@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
-    Alert,
+  Alert,
   ImageBackground,
   StyleSheet,
   Text,
@@ -8,20 +8,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import bg1 from '../../assets/bg1.jpg';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import {SERVER_URL} from './../../Constants';
 
 const Login = () => {
-
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const usernameSet = (text) => {
+  const usernameSet = text => {
     setUsername(text);
   };
-  const passSet = (text) => {
+  const passSet = text => {
     setPassword(text);
   };
 
@@ -30,7 +31,28 @@ const Login = () => {
       Alert.alert('Please enter username and password');
       return;
     } else {
-        console.log(username, password);
+      console.log('username: ', username);
+      var data = JSON.stringify({
+        username: username,
+        password: password,
+      });
+
+      var config = {
+        method: 'post',
+        url: SERVER_URL.APP_LOGIN,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -44,22 +66,34 @@ const Login = () => {
         <View style={styles.formCont}>
           <View style={styles.txtFormCont}>
             <Text style={styles.subHeadTxt}>Already a user? Let's sign in</Text>
-            <TextInput value={username} placeholder="Username" style={styles.txtInput} onChangeText={usernameSet}/>
-            <TextInput value={password} placeholder="Password" style={styles.txtInput} onChangeText={passSet}/>
+            <TextInput
+              value={username}
+              placeholder="Username"
+              style={styles.txtInput}
+              onChangeText={usernameSet}
+            />
+            <TextInput
+              value={password}
+              placeholder="Password"
+              style={styles.txtInput}
+              onChangeText={passSet}
+            />
           </View>
         </View>
         <View style={styles.btnCont}>
-            <View style={styles.buttonsCont}>
-                <TouchableOpacity style={styles.button} onPress={() => login()}>
-                    <Text style={styles.buttonTxt}>Login</Text>
-                </TouchableOpacity>
-            </View>
+          <View style={styles.buttonsCont}>
+            <TouchableOpacity style={styles.button} onPress={() => login()}>
+              <Text style={styles.buttonTxt}>Login</Text>
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.buttonsCont}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-                    <Text style={styles.buttonTxt}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
+          <View style={styles.buttonsCont}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.goBack()}>
+              <Text style={styles.buttonTxt}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.signupCont}>
           <View style={styles.discTxt}>
