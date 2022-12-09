@@ -90,7 +90,7 @@ const Login = () => {
           <View style={styles.buttonsCont}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate('Intro')}>
               <Text style={styles.buttonTxt}>Cancel</Text>
             </TouchableOpacity>
           </View>

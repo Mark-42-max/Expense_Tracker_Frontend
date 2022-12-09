@@ -11,6 +11,8 @@ import {
 import React, {useState} from 'react';
 import bg1 from '../../assets/bg1.jpg';
 import {useNavigation} from '@react-navigation/native';
+import { SERVER_URL } from '../../Constants';
+import axios from 'axios';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -30,6 +32,27 @@ const SignUp = () => {
       return;
     } else {
       console.log(username, password);
+      var data = JSON.stringify({
+        username: username,
+        password: password,
+      });
+
+      var config = {
+        method: 'post',
+        url: SERVER_URL.APP_SIGNUP,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -71,7 +94,7 @@ const SignUp = () => {
           <View style={styles.buttonsCont}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate('Intro')}>
               <Text style={styles.buttonTxt}>Cancel</Text>
             </TouchableOpacity>
           </View>
