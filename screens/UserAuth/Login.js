@@ -8,16 +8,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import bg1 from '../../assets/bg1.jpg';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {SERVER_URL} from './../../Constants';
+import { selectToken, setToken } from '../../slices/preloginSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
   const navigation = useNavigation();
+  const token = useSelector(selectToken);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const usernameSet = text => {
     setUsername(text);
@@ -48,13 +52,18 @@ const Login = () => {
 
       axios(config)
         .then(function (response) {
-          console.log(JSON.stringify(response.data));
+          console.log(JSON.stringify(response.data.token));
+          dispatch(setToken(response.data.token));
         })
         .catch(function (error) {
           console.log(error);
         });
     }
   };
+
+  useEffect(() => {
+    console.log(token);
+  }, [token]);
 
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
