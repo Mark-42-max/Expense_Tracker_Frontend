@@ -15,6 +15,7 @@ import axios from 'axios';
 import {SERVER_URL} from './../../Constants';
 import { selectToken, setToken } from '../../slices/preloginSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -28,6 +29,24 @@ const Login = () => {
   };
   const passSet = text => {
     setPassword(text);
+  };
+
+  const storeToken = async (tokenReceived) => {
+    try {
+      await EncryptedStorage.setItem(
+          'user_session',
+          JSON.stringify({
+              token : tokenReceived,
+          })
+      );
+
+      const session = await EncryptedStorage.getItem('user_session');
+      console.log('after login: ', session);
+
+      // Congrats! You've just stored your first value!
+  } catch (error) {
+      // There was an error on the native side
+  }
   };
 
   const login = () => {
@@ -54,6 +73,12 @@ const Login = () => {
         .then(function (response) {
           console.log(JSON.stringify(response.data.token));
           dispatch(setToken(response.data.token));
+          storeToken(response.data.token).then(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Dashboard' }],
+            });
+          });
         })
         .catch(function (error) {
           console.log(error);
