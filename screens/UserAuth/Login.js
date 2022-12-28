@@ -16,12 +16,14 @@ import {SERVER_URL} from './../../Constants';
 import { selectToken, setToken } from '../../slices/preloginSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import LoadingAnim from '../../components/LoadingAnim';
 
 const Login = () => {
   const navigation = useNavigation();
   const token = useSelector(selectToken);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const usernameSet = text => {
@@ -54,6 +56,7 @@ const Login = () => {
       Alert.alert('Please enter username and password');
       return;
     } else {
+      setLoading(true);
       console.log('username: ', username);
       var data = JSON.stringify({
         username: username,
@@ -71,6 +74,7 @@ const Login = () => {
 
       axios(config)
         .then(function (response) {
+          setLoading(false);
           console.log(JSON.stringify(response.data.token));
           dispatch(setToken(response.data.token));
           storeToken(response.data.token).then(() => {
@@ -143,6 +147,8 @@ const Login = () => {
           </View>
         </View>
       </View>
+
+      <LoadingAnim isActive={loading}/>
     </ImageBackground>
   );
 };

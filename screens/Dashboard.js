@@ -4,10 +4,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../slices/preloginSlice';
 
 const Dashboard = () => {
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     async function deleteTokens() {
         try {
@@ -24,6 +27,7 @@ const Dashboard = () => {
       <TouchableOpacity onPress={() => {
 
         deleteTokens().then(() => {
+            dispatch(setToken(''));
             console.log('Logout');
             navigation.navigate('Splash');
         });

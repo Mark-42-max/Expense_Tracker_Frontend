@@ -48,7 +48,41 @@ const SignUp = () => {
 
       axios(config)
         .then(function (response) {
-          console.log(JSON.stringify(response.data));
+          console.log(response.data.exists);
+          if (response.data.exists === 'exists'){
+            Alert.alert(
+              'OOPS!',
+              'Username already exists',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('Login'),
+                  style: 'OK',
+                },
+              ]
+            );
+          } else if (response.data.exists === 'otp'){
+            Alert.alert(
+              'OOPS!',
+              'Please verify your email',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('Signup'),
+                  style: 'OK',
+                },
+              ]
+            );
+          } else if (response.data.exists === 'none'){
+            Alert.alert('Congrats!!', 'Signup successful, Please enter OTP', [
+              {
+                text: 'OK',
+                onPress: () => navigation.navigate('Intro'),
+                style: 'OK',
+              }
+            ]);
+            navigation.navigate('Intro');
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -58,58 +92,60 @@ const SignUp = () => {
 
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
-      <View style={styles.loginCont}>
-        <View style={styles.heading}>
-          <Text style={styles.headingText}>SignUp</Text>
-        </View>
-
-        <View style={styles.formCont}>
-          <View style={styles.txtFormCont}>
-            <Text style={styles.subHeadTxt}>
-              New here? Just signup to get started
-            </Text>
-            <TextInput
-              placeholderTextColor="#000" // this is the color of the placeholder text
-              value={username}
-              placeholder="Username"
-              style={styles.txtInput}
-              onChangeText={usernameSet}
-            />
-            <TextInput
-              placeholderTextColor="#000" // this is the color of the placeholder text
-              value={password}
-              placeholder="Password"
-              style={styles.txtInput}
-              onChangeText={passSet}
-            />
-          </View>
-        </View>
-        <View style={styles.btnCont}>
-          <View style={styles.buttonsCont}>
-            <TouchableOpacity style={styles.button} onPress={() => signup()}>
-              <Text style={styles.buttonTxt}>SignUp</Text>
-            </TouchableOpacity>
+      <View style={styles.mainCont}>
+        <View style={styles.loginCont}>
+          <View style={styles.heading}>
+            <Text style={styles.headingText}>SignUp</Text>
           </View>
 
-          <View style={styles.buttonsCont}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('Intro')}>
-              <Text style={styles.buttonTxt}>Cancel</Text>
-            </TouchableOpacity>
+          <View style={styles.formCont}>
+            <View style={styles.txtFormCont}>
+              <Text style={styles.subHeadTxt}>
+                New here? Just signup to get started
+              </Text>
+              <TextInput
+                placeholderTextColor="#000" // this is the color of the placeholder text
+                value={username}
+                placeholder="Username"
+                style={styles.txtInput}
+                onChangeText={usernameSet}
+              />
+              <TextInput
+                placeholderTextColor="#000" // this is the color of the placeholder text
+                value={password}
+                placeholder="Password"
+                style={styles.txtInput}
+                onChangeText={passSet}
+              />
+            </View>
           </View>
-        </View>
-        <View style={styles.signupCont}>
-          <View style={styles.discTxt}>
-            <Text style={styles.subHeadTxt}>Got an account?</Text>
-          </View>
+          <View style={styles.btnCont}>
+            <View style={styles.buttonsCont}>
+              <TouchableOpacity style={styles.button} onPress={() => signup()}>
+                <Text style={styles.buttonTxt}>SignUp</Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.signupBtn}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.buttonTxt}>Login</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonsCont}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('Intro')}>
+                <Text style={styles.buttonTxt}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.signupCont}>
+            <View style={styles.discTxt}>
+              <Text style={styles.subHeadTxt}>Got an account?</Text>
+            </View>
+
+            <View style={styles.signupBtn}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.buttonTxt}>Login</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -120,6 +156,13 @@ const SignUp = () => {
 export default SignUp;
 
 const styles = StyleSheet.create({
+
+  mainCont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   container: {
     flex: 1,
     justifyContent: 'center',
