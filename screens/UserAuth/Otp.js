@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+
 import {
   Alert,
   ImageBackground,
@@ -8,29 +9,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import bg1 from '../../assets/bg1.jpg';
 import {useNavigation} from '@react-navigation/native';
+import {SERVER_URL} from '../../Constants';
 import axios from 'axios';
-import {SERVER_URL} from './../../Constants';
-import { selectToken, setToken } from '../../slices/preloginSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { setToken } from '../../slices/preloginSlice';
+import { useDispatch } from 'react-redux';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LoadingAnim from '../../components/LoadingAnim';
 
-const Login = () => {
+const Otp = ({route}) => {
+  const [otp, setOtp] = useState('');
   const navigation = useNavigation();
-  const token = useSelector(selectToken);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const {email} = route.params;
 
-  const usernameSet = text => {
-    setUsername(text);
-  };
-  const passSet = text => {
-    setPassword(text);
+  const changeOtpTxt = text => {
+    setOtp(text);
   };
 
   const storeToken = async (tokenReceived) => {
@@ -48,21 +45,20 @@ const Login = () => {
   }
   };
 
-  const login = () => {
-    if (!username || !password) {
-      Alert.alert('Please enter username and password');
+  const verifySignup = () => {
+    if (!otp) {
+      Alert.alert('Please enter otp');
       return;
     } else {
       setLoading(true);
-      console.log('username: ', username);
       var data = JSON.stringify({
-        username: username,
-        password: password,
+        email: email,
+        otp: otp,
       });
 
       var config = {
         method: 'post',
-        url: SERVER_URL.APP_LOGIN,
+        url: SERVER_URL.USER_VERIFY,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -72,18 +68,13 @@ const Login = () => {
       axios(config)
         .then(function (response) {
           setLoading(false);
-          if (response.data.success === true) {
-            console.log(JSON.stringify(response.data.token));
-            dispatch(setToken(response.data.token));
-            storeToken(response.data.token).then(() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Dashboard' }],
-              });
+          dispatch(setToken(response.data.token));
+          storeToken(response.data.token).then(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Dashboard' }],
             });
-          } else if (response.data.success === false) {
-            Alert.alert('OOPS!!!',  response.data.message + '. Please try again');
-          }
+          });
         })
         .catch(function (error) {
           console.log(error);
@@ -91,38 +82,33 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(token);
-  }, [token]);
-
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
       <View style={styles.loginCont}>
         <View style={styles.heading}>
-          <Text style={styles.headingText}>Login</Text>
+          <Text style={styles.headingText}>Verify</Text>
         </View>
 
         <View style={styles.formCont}>
           <View style={styles.txtFormCont}>
-            <Text style={styles.subHeadTxt}>Already a user? Let's sign in</Text>
+            <Text style={styles.subHeadTxt}>
+              Please verify the otp sent to you
+            </Text>
             <TextInput
-              value={username}
-              placeholder="Username"
+              placeholderTextColor="#000" // this is the color of the placeholder text
+              value={otp}
+              placeholder="Enter OTP"
               style={styles.txtInput}
-              onChangeText={usernameSet}
-            />
-            <TextInput
-              value={password}
-              placeholder="Password"
-              style={styles.txtInput}
-              onChangeText={passSet}
+              onChangeText={changeOtpTxt}
             />
           </View>
         </View>
         <View style={styles.btnCont}>
           <View style={styles.buttonsCont}>
-            <TouchableOpacity style={styles.button} onPress={() => login()}>
-              <Text style={styles.buttonTxt}>Login</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => verifySignup()}>
+              <Text style={styles.buttonTxt}>Verify</Text>
             </TouchableOpacity>
           </View>
 
@@ -134,27 +120,14 @@ const Login = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.signupCont}>
-          <View style={styles.discTxt}>
-            <Text style={styles.subHeadTxt}>Don't have an account?</Text>
-          </View>
-
-          <View style={styles.signupBtn}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('Signup')}>
-              <Text style={styles.buttonTxt}>SignUp</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
 
-      <LoadingAnim isActive={loading}/>
+      <LoadingAnim isActive={loading} />
     </ImageBackground>
   );
 };
 
-export default Login;
+export default Otp;
 
 const styles = StyleSheet.create({
   container: {
@@ -165,7 +138,7 @@ const styles = StyleSheet.create({
 
   loginCont: {
     width: '90%',
-    height: '90%',
+    height: '60%',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 25,
     borderColor: '#70cfc8',
@@ -189,8 +162,10 @@ const styles = StyleSheet.create({
   },
 
   btnCont: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
 
   buttonsCont: {

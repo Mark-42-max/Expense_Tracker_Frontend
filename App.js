@@ -12,6 +12,7 @@ import Signup from './screens/UserAuth/Signup';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import Dashboard from './screens/Dashboard';
+import Otp from './screens/UserAuth/Otp';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -60,6 +61,12 @@ const App = () => {
             <Stack.Screen
                 name="Dashboard"
                 component={Dashboard}
+                options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+                name="Otp"
+                component={Otp}
                 options={{headerShown: false}}
             />
           </Stack.Navigator>

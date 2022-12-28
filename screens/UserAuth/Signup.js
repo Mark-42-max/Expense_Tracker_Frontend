@@ -13,11 +13,13 @@ import bg1 from '../../assets/bg1.jpg';
 import {useNavigation} from '@react-navigation/native';
 import { SERVER_URL } from '../../Constants';
 import axios from 'axios';
+import LoadingAnim from '../../components/LoadingAnim';
 
 const SignUp = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const usernameSet = text => {
     setUsername(text);
@@ -31,6 +33,7 @@ const SignUp = () => {
       Alert.alert('Please enter username and password');
       return;
     } else {
+      setLoading(true);
       console.log(username, password);
       var data = JSON.stringify({
         username: username,
@@ -48,6 +51,7 @@ const SignUp = () => {
 
       axios(config)
         .then(function (response) {
+          setLoading(false);
           console.log(response.data.exists);
           if (response.data.exists === 'exists'){
             Alert.alert(
@@ -64,11 +68,13 @@ const SignUp = () => {
           } else if (response.data.exists === 'otp'){
             Alert.alert(
               'OOPS!',
-              'Please verify your email',
+              'Otp already sent. Please verify your email',
               [
                 {
                   text: 'OK',
-                  onPress: () => navigation.navigate('Signup'),
+                  onPress: () => navigation.navigate('Otp', {
+                    email: username,
+                  }),
                   style: 'OK',
                 },
               ]
@@ -77,9 +83,11 @@ const SignUp = () => {
             Alert.alert('Congrats!!', 'Signup successful, Please enter OTP', [
               {
                 text: 'OK',
-                onPress: () => navigation.navigate('Intro'),
+                onPress: () => navigation.navigate('Otp', {
+                  email: username,
+                }),
                 style: 'OK',
-              }
+              },
             ]);
             navigation.navigate('Intro');
           }
@@ -92,8 +100,7 @@ const SignUp = () => {
 
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">
-      <View style={styles.mainCont}>
-        <View style={styles.loginCont}>
+      <View style={styles.loginCont}>
           <View style={styles.heading}>
             <Text style={styles.headingText}>SignUp</Text>
           </View>
@@ -147,8 +154,9 @@ const SignUp = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
       </View>
+
+      <LoadingAnim isActive={loading}/>
     </ImageBackground>
   );
 };
@@ -156,13 +164,6 @@ const SignUp = () => {
 export default SignUp;
 
 const styles = StyleSheet.create({
-
-  mainCont: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
   container: {
     flex: 1,
     justifyContent: 'center',
