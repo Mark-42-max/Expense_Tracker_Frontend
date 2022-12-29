@@ -81,7 +81,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
           }
         );
     });
-  }, []);
+  }, [measurements]);
 
   return <View style={{
     position: 'absolute',
@@ -95,7 +95,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
     }}
     ref={containerRef}
     >
-      {data.map((item, index) => <Tab item={item} ref={item.ref} onItemPress={() => {
+      {data.map((item, index) => <Tab key={index} item={item} ref={item.ref} onItemPress={() => {
         onItemPress(index);
       }}/>)}
     </View>
