@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../slices/preloginSlice';
+import bg1 from '../assets/bg1.jpg';
+import CustomTabs from '../components/CustomTabs';
 
 const Dashboard = () => {
 
@@ -21,23 +23,31 @@ const Dashboard = () => {
         }
     }
 
-  return (
-    <View>
-      <Text>Dashboard</Text>
-      <TouchableOpacity onPress={() => {
+    const requestLogout = () => {
+      deleteTokens().then(() => {
+        dispatch(setToken(''));
+        console.log('Logout');
+        navigation.navigate('Splash');
+      });
+    };
 
-        deleteTokens().then(() => {
-            dispatch(setToken(''));
-            console.log('Logout');
-            navigation.navigate('Splash');
-        });
-      }}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
-    </View>
+  return (
+    <ImageBackground source={bg1} resizeMode="cover" style={styles.bg}>
+      <View style={styles.container}>
+        <CustomTabs />
+      </View>
+    </ImageBackground>
   );
 };
 
 export default Dashboard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
+
+  container: {
+    flex: 1,
+  },
+});
