@@ -6,11 +6,14 @@ import bg1 from '../assets/bg1.jpg';
 import { ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../slices/preloginSlice';
 
 const SplashScreen = () => {
 
   const navigation = useNavigation();
-  const [token, setToken] = useState('');
+  const [thisToken, setThisToken] = useState('');
+  const dispatch = useDispatch();
 
 
   async function retrieveToken() {
@@ -20,7 +23,8 @@ const SplashScreen = () => {
         if (session) {
             // Congrats! You've just retrieved your first value!
             console.log('session: ', session);
-            setToken((JSON.parse(session)).token);
+            setThisToken((JSON.parse(session)).token);
+            dispatch(setToken((JSON.parse(session)).token));
         } else {
           console.log('====================================');
           console.log('No token found');
@@ -36,8 +40,8 @@ const SplashScreen = () => {
     retrieveToken()
     .then(() => {
       setTimeout(() => {
-        console.log('token: ', token);
-          if (token) {
+        console.log('token: ', thisToken);
+          if (thisToken) {
             navigation.reset({
               index: 0,
               routes: [{ name: 'Dashboard' }],
@@ -50,7 +54,7 @@ const SplashScreen = () => {
           }
         });
       }, 10000);
-  }, [navigation, token]);
+  }, [navigation, thisToken]);
 
   return (
     <ImageBackground style={styles.container} source={bg1} resizeMode="cover">

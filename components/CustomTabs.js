@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
-import { Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 
 const {width, height} = Dimensions.get('window');
@@ -18,14 +18,14 @@ const images = {
   help:
     'https://images.pexels.com/photos/2552130/pexels-photo-2552130.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
 };
-const data = Object.keys(images).map((i) => ({
-  key: i,
-  title: i,
-  image: images[i],
-  ref: React.createRef(),
-}));
+// const data = Object.keys(images).map((i) => ({
+//   key: i,
+//   title: i,
+//   image: images[i],
+//   ref: React.createRef(),
+// }));
 
-const Indicator = ({measures, scrollX}) => {
+const Indicator = ({measures, scrollX, data}) => {
 
   const inputRange = data.map((_, i) => i * width);
   const indicatorWidth = scrollX.interpolate({
@@ -50,12 +50,12 @@ const Indicator = ({measures, scrollX}) => {
   }}/>;
 };
 
-const Tab = React.forwardRef(({item, onItemPress}, ref) => {
+const Tab = React.forwardRef(({item, onItemPress, data}, ref) => {
   return <TouchableOpacity onPress={onItemPress}>
   <View ref={ref}>
     <Text style={{
       color: 'white',
-      fontSize: 100 / data.length,
+      fontSize: 80 / data.length,
     }}>{item.title}</Text>
   </View>
   </TouchableOpacity>;
@@ -81,11 +81,13 @@ const Tabs = ({data, scrollX, onItemPress}) => {
           }
         );
     });
-  }, [measurements]);
+
+    console.log(measurements);
+  }, [data, measurements.length]);
 
   return <View style={{
     position: 'absolute',
-    top: 100,
+    top: 10,
     width,
   }}>
     <View style={{
@@ -97,17 +99,19 @@ const Tabs = ({data, scrollX, onItemPress}) => {
     >
       {data.map((item, index) => <Tab key={index} item={item} ref={item.ref} onItemPress={() => {
         onItemPress(index);
-      }}/>)}
+      }} data={data}/>)}
     </View>
-    {measurements.length > 0 && <Indicator measures={measurements} scrollX={scrollX}/>}
+    {measurements.length > 0 && <Indicator measures={measurements} scrollX={scrollX} data={data}/>}
   </View>;
 };
 
 
-const CustomTabs = () => {
+const CustomTabs = ({isBg, isOverlay, contentBg, bgColor, tabTitles, children, onIndexChange}) => {
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const flatListRef = React.useRef();
+  const [titles, setTitles] = React.useState([]);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const onItemPress = React.useCallback((itemIndex) => {
     flatListRef.current.scrollToOffset({
@@ -115,11 +119,30 @@ const CustomTabs = () => {
     });
   });
 
+  React.useEffect(() => {
+    if (tabTitles.length > 0){
+      setTitles(tabTitles.map((item, index) => {
+        return {
+          key: index,
+          title: item,
+          ref: React.createRef(),
+        };
+      }));
+    }
+  }, [tabTitles]);
+
+  React.useEffect(() => {
+
+    if (typeof onIndexChange === 'function'){
+      onIndexChange(currentIndex);
+    }
+  }, [currentIndex]);
+
   return (
     <View>
       <Animated.FlatList
         ref={flatListRef}
-        data={data}
+        data={titles}
         keyExtractor={(item) => item.key}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
@@ -129,18 +152,28 @@ const CustomTabs = () => {
           return (
             <>
               <View style={{width, height}}>
-                {/* <Image source={{uri: item.image}} style={{flex: 1, resizeMode: 'cover'}}/>
-                <View style={[StyleSheet.absoluteFillObject, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]}/> */}
+                {isBg && <Image source={{uri: item.image}} style={{flex: 1, resizeMode: 'cover'}}/>}
+                {isOverlay && <View style={[StyleSheet.absoluteFillObject, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]}/>}
               </View>
-              <View style={{
+              <View style={contentBg ? {
+                position: 'absolute',
+                top: 70,
+                left: 0,
+                width,
+                height: (height/2),
+                backgroundColor: bgColor ? bgColor : 'white',
+                justifyContent: 'flex-end',
+              } : {
                 position: 'absolute',
                 top: 150,
                 left: 0,
                 width,
                 height: (height - 150),
-                backgroundColor: 'white',
+                backgroundColor: 'transparent',
               }}>
-                <Text>hhh</Text>
+                <ScrollView>
+                  {children && children}
+                </ScrollView>
               </View>
             </>
           );
@@ -149,9 +182,17 @@ const CustomTabs = () => {
         showsHorizontalScrollIndicator={false}
         bounces={false}
         pagingEnabled
+        onMomentumScrollEnd={(event) => {
+          const index = Math.floor(
+              Math.floor(event.nativeEvent.contentOffset.x) /
+              Math.floor(event.nativeEvent.layoutMeasurement.width)
+          );
+          // work with: index
+          setCurrentIndex(index);
+      }}
       />
 
-      <Tabs data={data} scrollX={scrollX} onItemPress={onItemPress}/>
+      <Tabs data={titles} scrollX={scrollX} onItemPress={onItemPress}/>
     </View>
   );
 };

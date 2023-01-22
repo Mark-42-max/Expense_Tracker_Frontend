@@ -8,4 +8,5 @@ export const SERVER_URL = {
   APP_LOGIN: indexFuncUrl + '/login',
   APP_SIGNUP: indexFuncUrl + '/signup',
   USER_VERIFY: indexFuncUrl + '/signup/validate',
+  GET_EXPENSES: indexFuncUrl + '/dashboard',
 };

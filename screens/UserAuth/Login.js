@@ -87,6 +87,7 @@ const Login = () => {
         })
         .catch(function (error) {
           console.log(error);
+          navigation.reset('Intro');
         });
     }
   };
