@@ -6,6 +6,7 @@ const initialState = {
     expenses: [],
     total: 0,
     totalExpenses: 0,
+    name: '',
 };
 
 export const dashSlice = createSlice({
@@ -24,13 +25,18 @@ export const dashSlice = createSlice({
         setTotalExpenses: (state, action) => {
             state.totalExpenses = action.payload;
         },
+
+        setName: (state, action) => {
+            state.name = action.payload;
+        },
     },
 });
 
-export const { setExpenses, setTotal, setTotalExpenses } = dashSlice.actions;
+export const { setExpenses, setTotal, setTotalExpenses, setName } = dashSlice.actions;
 
 export const selectExpenses = (state) => state.dash.expenses;
 export const selectTotal = (state) => state.dash.total;
 export const selectTotalExpenses = (state) => state.dash.totalExpenses;
+export const selectName = (state) => state.dash.name;
 
 export default dashSlice.reducer;

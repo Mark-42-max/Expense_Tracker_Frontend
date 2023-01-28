@@ -19,6 +19,7 @@ const SignUp = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
   const usernameSet = text => {
@@ -28,8 +29,12 @@ const SignUp = () => {
     setPassword(text);
   };
 
+  const nameSet = (text) => {
+    setName(text);
+  };
+
   const signup = () => {
-    if (!username || !password) {
+    if (!username || !password || !name) {
       Alert.alert('Please enter username and password');
       return;
     } else {
@@ -38,6 +43,7 @@ const SignUp = () => {
       var data = JSON.stringify({
         username: username,
         password: password,
+        name: name,
       });
 
       var config = {
@@ -123,6 +129,13 @@ const SignUp = () => {
                 placeholder="Password"
                 style={styles.txtInput}
                 onChangeText={passSet}
+              />
+              <TextInput
+                placeholderTextColor="#000" // this is the color of the placeholder text
+                value={name}
+                placeholder="What should we call you?"
+                style={styles.txtInput}
+                onChangeText={nameSet}
               />
             </View>
           </View>

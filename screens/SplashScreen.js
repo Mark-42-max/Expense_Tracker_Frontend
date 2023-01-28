@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';

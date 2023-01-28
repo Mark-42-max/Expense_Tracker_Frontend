@@ -21,7 +21,7 @@ import {useEffect} from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { SERVER_URL } from './../Constants';
-import { selectTotal, setExpenses, setTotal, setTotalExpenses } from '../slices/dashSlice';
+import { selectName, selectTotal, setExpenses, setName, setTotal, setTotalExpenses } from '../slices/dashSlice';
 import { selectTotalExpenses } from './../slices/dashSlice';
 
 const Dashboard = () => {
@@ -32,6 +32,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const totalBal = useSelector(selectTotal);
   const totalExp = useSelector(selectTotalExpenses);
+  const name = useSelector(selectName);
 
   async function deleteTokens() {
     try {
@@ -72,14 +73,21 @@ const Dashboard = () => {
         dispatch(setExpenses(response.data.data.transactions.transactions));
         dispatch(setTotal(response.data.data.transactions.total_bal));
         dispatch(setTotalExpenses(response.data.data.transactions.totalExpense));
+        dispatch(setName(response.data.data.user));
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
+  // useEffect(() => {
+  //   getExpenses();
+  // }, []);
+
   useEffect(() => {
-    getExpenses();
+    navigation.addListener('focus', () => {
+      getExpenses();
+    });
   }, []);
 
   return (
@@ -87,7 +95,7 @@ const Dashboard = () => {
       <View style={styles.container}>
         <View style={styles.topCont}>
           <View style={styles.topHead}>
-            <Text style={styles.nameTxt}>Soham Das</Text>
+            <Text style={styles.nameTxt}>{name}</Text>
           </View>
           <View style={styles.bottomHead}>
             <TouchableOpacity style={styles.logoutBtn} onPress={requestLogout}>
@@ -121,11 +129,11 @@ const Dashboard = () => {
           />
         </View>
 
-        <View style={styles.buttonCont}>
-          <TouchableOpacity style={styles.addBtn}>
+        {currentIndex === 0 && <View style={styles.buttonCont}>
+          <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('AddExpense')}>
             <Text style={styles.buttonTxt}>Add Expense</Text>
           </TouchableOpacity>
-        </View>
+        </View>}
       </View>
       {isLoading && <View style={styles.loader}>
         <Text style={{

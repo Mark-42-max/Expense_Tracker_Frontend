@@ -10,4 +10,5 @@ export const SERVER_URL = {
   APP_SIGNUP: indexFuncUrl + '/signup',
   USER_VERIFY: indexFuncUrl + '/signup/validate',
   GET_EXPENSES: indexFuncUrl + '/dashboard',
+  ADD_EXPENSES: indexFuncUrl + '/dashboard/add',
 };

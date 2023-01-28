@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import Dashboard from './screens/Dashboard';
 import Otp from './screens/UserAuth/Otp';
+import AddExpense from './screens/AddExpense';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -67,6 +68,12 @@ const App = () => {
             <Stack.Screen
                 name="Otp"
                 component={Otp}
+                options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+                name="AddExpense"
+                component={AddExpense}
                 options={{headerShown: false}}
             />
           </Stack.Navigator>

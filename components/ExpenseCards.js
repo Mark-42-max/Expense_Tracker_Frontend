@@ -17,11 +17,16 @@ const ExpenseCards = () => {
 
   return (
     <View style={styles.container}>
-      {expenses.map(item =>
+      {expenses.length > 0 ? expenses.map(item =>
         <View key={item.transaction_id} style={styles.cardCont}>
           <ExpenseCard transaction={item}/>
         </View>
-      )}
+      )
+    :
+      <View style={styles.emptyCont}>
+        <Text style={styles.emptyExpenses}>Oorah!! No expenses yet</Text>
+      </View>
+    }
     </View>
   );
 };
@@ -35,5 +40,18 @@ const styles = StyleSheet.create({
 
     cardCont: {
       padding: 10,
+    },
+
+    emptyExpenses: {
+      fontSize: 20,
+      fontFamily: 'MerriweatherSans-BoldItalic',
+      textAlign: 'center',
+      color: '#fff',
+    },
+
+    emptyCont: {
+      height: 500,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
 });
