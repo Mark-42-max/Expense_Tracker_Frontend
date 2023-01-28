@@ -4,6 +4,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     expenses: [],
+    total: 0,
+    totalExpenses: 0,
 };
 
 export const dashSlice = createSlice({
@@ -14,11 +16,21 @@ export const dashSlice = createSlice({
         setExpenses: (state, action) => {
             state.expenses = action.payload;
         },
+
+        setTotal: (state, action) => {
+            state.total = action.payload;
+        },
+
+        setTotalExpenses: (state, action) => {
+            state.totalExpenses = action.payload;
+        },
     },
 });
 
-export const { setExpenses } = dashSlice.actions;
+export const { setExpenses, setTotal, setTotalExpenses } = dashSlice.actions;
 
 export const selectExpenses = (state) => state.dash.expenses;
+export const selectTotal = (state) => state.dash.total;
+export const selectTotalExpenses = (state) => state.dash.totalExpenses;
 
 export default dashSlice.reducer;

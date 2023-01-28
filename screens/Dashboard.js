@@ -21,13 +21,17 @@ import {useEffect} from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { SERVER_URL } from './../Constants';
+import { selectTotal, setExpenses, setTotal, setTotalExpenses } from '../slices/dashSlice';
+import { selectTotalExpenses } from './../slices/dashSlice';
 
 const Dashboard = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const token = useSelector(selectToken);
-  const[isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const totalBal = useSelector(selectTotal);
+  const totalExp = useSelector(selectTotalExpenses);
 
   async function deleteTokens() {
     try {
@@ -64,7 +68,10 @@ const Dashboard = () => {
     axios(config)
       .then(function (response) {
         setIsLoading(false);
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data.data.transactions.transactions));
+        dispatch(setExpenses(response.data.data.transactions.transactions));
+        dispatch(setTotal(response.data.data.transactions.total_bal));
+        dispatch(setTotalExpenses(response.data.data.transactions.totalExpense));
       })
       .catch(function (error) {
         console.log(error);
@@ -89,7 +96,14 @@ const Dashboard = () => {
             <Text style={styles.botTxt}>
               Total Balance:{' '}
               <Text style={{color: 'green', backgroundColor: '#fff'}}>
-                15000
+                {totalBal}
+              </Text>
+            </Text>
+
+            <Text style={styles.botTxt}>
+              Total Expense:{' '}
+              <Text style={{color: 'red', backgroundColor: '#fff'}}>
+                {totalExp}
               </Text>
             </Text>
           </View>
@@ -105,6 +119,12 @@ const Dashboard = () => {
             onIndexChange={index => setCurrentIndex(index)}
             children={<TabBody currentIndex={currentIndex} />}
           />
+        </View>
+
+        <View style={styles.buttonCont}>
+          <TouchableOpacity style={styles.addBtn}>
+            <Text style={styles.buttonTxt}>Add Expense</Text>
+          </TouchableOpacity>
         </View>
       </View>
       {isLoading && <View style={styles.loader}>
@@ -133,7 +153,7 @@ const styles = StyleSheet.create({
   },
 
   bottomCont: {
-    flex: 4,
+    flex: 3,
   },
 
   topHead: {
@@ -182,5 +202,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+
+  buttonCont: {
+    flexGrow: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  addBtn: {
+    backgroundColor: '#89cedb',
+    width: '80%',
+    height: 50,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  buttonTxt: {
+    fontFamily: 'MerriweatherSans-Medium',
+    fontSize: 18,
+    color: '#000',
   },
 });
