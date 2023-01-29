@@ -104,7 +104,8 @@ const Dashboard = () => {
             <Text style={styles.botTxt}>
               Total Balance:{' '}
               <Text style={{color: 'green', backgroundColor: '#fff'}}>
-                {totalBal}
+                {totalBal} {'\t'}
+                {}
               </Text>
             </Text>
 
@@ -232,5 +233,11 @@ const styles = StyleSheet.create({
     fontFamily: 'MerriweatherSans-Medium',
     fontSize: 18,
     color: '#000',
+  },
+
+  ellipsis: {
+    fontSize: 10,
+    color: '#000',
+    fontFamily: 'MerriweatherSans-Medium',
   },
 });

@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 import { SERVER_URL } from './../Constants';
 import { useNavigation } from '@react-navigation/native';
+import { selectTotal } from '../slices/dashSlice';
 
 const AddExpense = () => {
   const [title, setTitle] = useState('');
@@ -18,12 +19,18 @@ const AddExpense = () => {
   const [isLoading, setIsLoading] = useState(false);
   const token = useSelector(selectToken);
   const navigation = useNavigation();
+  const totalBal = useSelector(selectTotal);
 
   const onSubmit = () => {
 
     if (!title || !amount || title === '' || amount === 0) {
         Alert.alert('Please enter title and amount');
         return;
+    }
+
+    if (amount > totalBal) {
+        Alert.alert('You do not have enough balance for this transaction.');
+        navigation.navigate('Dashboard');
     }
 
     const year = new Date().getFullYear();
