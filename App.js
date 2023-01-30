@@ -14,6 +14,8 @@ import { store } from './store';
 import Dashboard from './screens/Dashboard';
 import Otp from './screens/UserAuth/Otp';
 import AddExpense from './screens/AddExpense';
+import { MenuProvider } from 'react-native-popup-menu';
+import AddTotal from './screens/AddTotal';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -25,60 +27,68 @@ const App = () => {
           'radial-gradient(50% 50% at 50% 50%, rgba(63,174,251,0.5) 0%, rgba(rgba(252,70,107,0.7) 100%)'
         }
       />
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Splash">
+      <MenuProvider>
+        <Provider store={store}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Splash">
 
-            <Stack.Screen
-                name="Welcome"
-                component={WelcomeScreen}
+              <Stack.Screen
+                  name="Welcome"
+                  component={WelcomeScreen}
+                  options={{headerShown: false}}
+              />
+
+              <Stack.Screen
+                name="Splash"
+                component={SplashScreen}
+                options={{headerShown: false,  headerBackVisible:false}}
+              />
+
+              <Stack.Screen
+                name="Intro"
+                component={Intro}
                 options={{headerShown: false}}
-            />
+              />
 
-            <Stack.Screen
-              name="Splash"
-              component={SplashScreen}
-              options={{headerShown: false,  headerBackVisible:false}}
-            />
+              <Stack.Screen
+                  name="Login"
+                  component={Login}
+                  options={{headerShown: false}}
+              />
 
-            <Stack.Screen
-              name="Intro"
-              component={Intro}
-              options={{headerShown: false}}
-            />
+              <Stack.Screen
+                  name="Signup"
+                  component={Signup}
+                  options={{headerShown: false}}
+              />
 
-            <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{headerShown: false}}
-            />
+              <Stack.Screen
+                  name="Dashboard"
+                  component={Dashboard}
+                  options={{headerShown: false}}
+              />
 
-            <Stack.Screen
-                name="Signup"
-                component={Signup}
-                options={{headerShown: false}}
-            />
+              <Stack.Screen
+                  name="Otp"
+                  component={Otp}
+                  options={{headerShown: false}}
+              />
 
-            <Stack.Screen
-                name="Dashboard"
-                component={Dashboard}
-                options={{headerShown: false}}
-            />
+              <Stack.Screen
+                  name="AddExpense"
+                  component={AddExpense}
+                  options={{headerShown: false}}
+              />
 
-            <Stack.Screen
-                name="Otp"
-                component={Otp}
-                options={{headerShown: false}}
-            />
-
-            <Stack.Screen
-                name="AddExpense"
-                component={AddExpense}
-                options={{headerShown: false}}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+              <Stack.Screen
+                  name="AddTotal"
+                  component={AddTotal}
+                  options={{headerShown: false}}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
+      </MenuProvider>
     </SafeAreaView>
   );
 };

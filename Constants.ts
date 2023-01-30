@@ -3,7 +3,7 @@ const serverUrl = 'https://tranquil-fox-9662ab.netlify.app';
 const demoUrl = 'http://10.0.2.2:8888';
 
 const indexFunc = '/.netlify/functions/index/';
-const indexFuncUrl = demoUrl + indexFunc;
+const indexFuncUrl = serverUrl + indexFunc;
 
 export const SERVER_URL = {
   APP_LOGIN: indexFuncUrl + '/login',
@@ -11,4 +11,5 @@ export const SERVER_URL = {
   USER_VERIFY: indexFuncUrl + '/signup/validate',
   GET_EXPENSES: indexFuncUrl + '/dashboard',
   ADD_EXPENSES: indexFuncUrl + '/dashboard/add',
+  TOTAL_OPERATIONS: indexFuncUrl + '/dashboard/total_operations',
 };

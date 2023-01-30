@@ -19,10 +19,24 @@ import CustomTabs from '../components/CustomTabs';
 import TabBody from './../components/TabBody';
 import {useEffect} from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { SERVER_URL } from './../Constants';
-import { selectName, selectTotal, setExpenses, setName, setTotal, setTotalExpenses } from '../slices/dashSlice';
-import { selectTotalExpenses } from './../slices/dashSlice';
+import {useSelector} from 'react-redux';
+import {SERVER_URL} from './../Constants';
+import {
+  selectName,
+  selectTotal,
+  setExpenses,
+  setName,
+  setTotal,
+  setTotalExpenses,
+} from '../slices/dashSlice';
+import {selectTotalExpenses} from './../slices/dashSlice';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import Option from '../assets/svg/Option';
 
 const Dashboard = () => {
   const navigation = useNavigation();
@@ -30,7 +44,7 @@ const Dashboard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const token = useSelector(selectToken);
   const [isLoading, setIsLoading] = useState(false);
-  const totalBal = useSelector(selectTotal);
+  const totalBalance = useSelector(selectTotal);
   const totalExp = useSelector(selectTotalExpenses);
   const name = useSelector(selectName);
 
@@ -69,10 +83,14 @@ const Dashboard = () => {
     axios(config)
       .then(function (response) {
         setIsLoading(false);
-        console.log(JSON.stringify(response.data.data.transactions.transactions));
+        // console.log(
+        //   JSON.stringify(response.data.data.transactions.total_bal),
+        // );
         dispatch(setExpenses(response.data.data.transactions.transactions));
         dispatch(setTotal(response.data.data.transactions.total_bal));
-        dispatch(setTotalExpenses(response.data.data.transactions.totalExpense));
+        dispatch(
+          setTotalExpenses(response.data.data.transactions.totalExpense),
+        );
         dispatch(setName(response.data.data.user));
       })
       .catch(function (error) {
@@ -80,9 +98,13 @@ const Dashboard = () => {
       });
   };
 
-  // useEffect(() => {
-  //   getExpenses();
-  // }, []);
+  useEffect(() => {
+    console.log('Total Balance: ' + totalBalance);
+  }, [totalBalance]);
+
+const operateTotal = (type) => {
+  navigation.navigate('AddTotal', {type: type});
+};
 
   useEffect(() => {
     navigation.addListener('focus', () => {
@@ -101,20 +123,46 @@ const Dashboard = () => {
             <TouchableOpacity style={styles.logoutBtn} onPress={requestLogout}>
               <Text style={styles.botTxt}>Log out</Text>
             </TouchableOpacity>
-            <Text style={styles.botTxt}>
-              Total Balance:{' '}
-              <Text style={{color: 'green', backgroundColor: '#fff'}}>
-                {totalBal} {'\t'}
-                {}
+            <View style={styles.botCont}>
+              <Text style={styles.botTxt}>
+                Total Balance:{' '}
               </Text>
-            </Text>
+              <Text style={styles.totalBotTxt}>
+                {totalBalance}
+              </Text>
+              <Menu>
+                    <MenuTrigger children={<Option />} style={{marginLeft: 20}}/>
+                    <MenuOptions optionsContainerStyle={styles.optionCont}>
+                      <MenuOption
+                        customStyles={triggerStyles}
+                        onSelect={() => operateTotal('replace')}
+                        text="Replace Total"
+                        style={styles.optionIndividual}
+                      />
+                      <MenuOption
+                        customStyles={triggerStyles}
+                        onSelect={() => operateTotal('add')}
+                        text="Add to Total"
+                        style={styles.optionIndividual}
+                      />
+                      <MenuOption
+                        customStyles={triggerStyles}
+                        onSelect={() => operateTotal('remove')}
+                        text="Remove Total"
+                        style={styles.optionIndividual}
+                      />
+                    </MenuOptions>
+                  </Menu>
+            </View>
 
-            <Text style={styles.botTxt}>
-              Total Expense:{' '}
-              <Text style={{color: 'red', backgroundColor: '#fff'}}>
+            <View style={styles.botCont}>
+              <Text style={styles.botTxt}>
+                Total Expense:{' '}
+              </Text>
+              <Text style={styles.totalBotTxtDanger}>
                 {totalExp}
               </Text>
-            </Text>
+            </View>
           </View>
         </View>
 
@@ -130,19 +178,28 @@ const Dashboard = () => {
           />
         </View>
 
-        {currentIndex === 0 && <View style={styles.buttonCont}>
-          <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('AddExpense')}>
-            <Text style={styles.buttonTxt}>Add Expense</Text>
-          </TouchableOpacity>
-        </View>}
+        {currentIndex === 0 && (
+          <View style={styles.buttonCont}>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => navigation.navigate('AddExpense')}>
+              <Text style={styles.buttonTxt}>Add Expense</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-      {isLoading && <View style={styles.loader}>
-        <Text style={{
-          color: '#fff',
-          fontSize: 20,
-          fontFamily: 'MerriweatherSans-Medium',
-        }}>Loading...</Text>
-      </View>}
+      {isLoading && (
+        <View style={styles.loader}>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              fontFamily: 'MerriweatherSans-Medium',
+            }}>
+            Loading...
+          </Text>
+        </View>
+      )}
     </ImageBackground>
   );
 };
@@ -240,4 +297,49 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'MerriweatherSans-Medium',
   },
+
+  optionCont: {
+    width: 154,
+    height: 107,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    paddingTop: 10,
+  },
+
+  optionIndividual: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingStart: 10,
+    paddingBottom: 5,
+    borderRadius: 10,
+  },
+
+  botCont: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '50%',
+  },
+
+  totalBotTxt: {
+    color: 'green',
+    backgroundColor: '#fff',
+    fontSize: 15,
+    fontFamily: 'MerriweatherSans-Regular',
+  },
+
+  totalBotTxtDanger: {
+    color: 'red',
+    backgroundColor: '#fff',
+    fontSize: 15,
+    fontFamily: 'MerriweatherSans-Regular',
+  },
 });
+
+const triggerStyles = {
+  triggerText: {
+    color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 12,
+  },
+};
