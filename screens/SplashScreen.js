@@ -53,8 +53,8 @@ const SplashScreen = () => {
               routes: [{ name: 'Welcome' }],
             });
           }
-        });
-      }, 10000);
+        }, 2000);
+      });
   }, [navigation, thisToken]);
 
   return (

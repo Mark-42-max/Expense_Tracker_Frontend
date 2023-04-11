@@ -129,6 +129,7 @@ const SignUp = () => {
                 placeholder="Password"
                 style={styles.txtInput}
                 onChangeText={passSet}
+                secureTextEntry={true}
               />
               <TextInput
                 placeholderTextColor="#000" // this is the color of the placeholder text

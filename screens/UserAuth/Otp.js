@@ -100,6 +100,7 @@ const Otp = ({route}) => {
               placeholder="Enter OTP"
               style={styles.txtInput}
               onChangeText={changeOtpTxt}
+              secureTextEntry={true}
             />
           </View>
         </View>

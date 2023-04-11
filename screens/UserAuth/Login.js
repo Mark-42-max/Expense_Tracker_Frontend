@@ -117,6 +117,7 @@ const Login = () => {
               placeholder="Password"
               style={styles.txtInput}
               onChangeText={passSet}
+              secureTextEntry={true}
             />
           </View>
         </View>
